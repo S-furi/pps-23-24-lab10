@@ -111,6 +111,30 @@ seqR2(s(N), Result) :- seqR2(N, Rest), last(Rest, s(N), Result).
 llast(cons(H, nil), X).
 llast(cons(_, T), L) :- llast(T, L).
 
-%% l map (_ + 1)
-map(cons(H, nil), cons(s(H), nil)).
-map(cons(H, T), cons(s(H), T)) :- map(cons(H, T)).
+%% List map (_ + 1)
+map(nil, nil).
+map(cons(H, T), cons(s(H), T1)) :- map(T, T1).
+
+%% List filter (_ > 0)
+
+filter(nil, nil).
+filter(cons(zero, T), T).
+filter(cons(s(H), T), cons(s(H), T1)) :- filter(T, T1).
+
+% Usage: filter(cons(s(s(zero)), cons(zero, cons(s(zero), nil))), X)
+
+%% List count (_ > 0)
+count_rec(nil, zero).
+count_rec(cons(H, T), s(C)) :- count_rec(T, C).
+count(nil, zero). % Empty List
+count(cons(H, T), C) :- filter(cons(H, T), X), count_rec(X, C).
+
+% Usage: count(cons(s(zero), cons(s(s(zero)), cons(zero, nil))), C)
+
+%% List find (_ > 0)
+
+lfind_rec(nil, nil).
+lfind_rec(cons(H, T), H).
+lfind(cons(H, T), E) :- filter(cons(H, T), X), lfind_rec(X, E).
+
+% Usage: lfind(cons(zero, cons(s(zero), cons(s(s(zero)), nil))), X)
